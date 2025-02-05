@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Effects</title>
+    <style>
+        body {
+            text-align: center;
+            margin: 50px;
+            background-color: #f4f4f4;
+        }
+        .image-container {
+            display: inline-block;
+            position: relative;
+        }
+
+        img {
+            width: 200px;
+            height: auto;
+            border-radius: 10px;
+        }
+
+
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+  
+        .rotate {
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        
+        .zoom-in {
+            animation: zoomIn 2s infinite alternate;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(1); }
+            to { transform: scale(1.2); }
+        }
+
+        
+        .zoom-out {
+            animation: zoomOut 2s infinite alternate;
+        }
+
+        @keyframes zoomOut {
+            from { transform: scale(1.2); }
+            to { transform: scale(1); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h2>CSS Image Effects</h2>
+
+    <div class="image-container">
+        <img src="https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg" class="bounce" alt="Bouncing Image">
+        <p>Bouncing</p>
+    </div>
+
+    <div class="image-container">
+        <img src="https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg" class="rotate" alt="Rotating Image">
+        <p>content</p>
+    </div>
+
+    <div class="image-container">
+        <img src="https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg" class="zoom-in" alt="Zoom In Image">
+        <p>Zoom In</p>
+    </div>
+
+    <div class="image-container">
+        <img src="https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg" class="zoom-out" alt="Zoom Out Image">
+        <p>Zoom Out</p>
+    </div>
+
+</body>
+</html>

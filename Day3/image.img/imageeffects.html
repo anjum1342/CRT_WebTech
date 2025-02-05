@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: blueviolet;
+            margin: 50px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        img {
+            width: 200px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 9, 1);
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .flip:hover {
+            transform: rotate(180deg);
+        }
+
+        .blur {
+            filter: blur(5px);
+        }
+
+        .blur:hover {
+            filter: blur(0);
+        }
+
+        .pulse {
+            animation: pulse 0.8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .shake:hover {
+            animation: shake 0.3s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translate(0);
+            }
+            25% {
+                transform: translate(-5px);
+            }
+            50% {
+                transform: translate(5px);
+            }
+            70% {
+                transform: translate(-5px);
+            }
+        }
+
+        .spin:hover {
+            transform: rotate(360deg);
+        }
+
+        
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Awesome Image Effects</h1>
+
+    <div class="container">
+        <div>
+            <h2>1. Floating Effect</h2>
+            <img src="https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg" alt="Floating Image" class="float">
+        </div><br><br>
+
+        <div>
+            <h2>2. Blur to Focus Effect</h2>
+            <img src="https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg" alt="Focusing Image" class="blur">
+        </div><br><br>
+
+        <div>
+            <h2>3. Pulsing Effect</h2>
+            <img src="https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg" alt="Pulsing Image" class="pulse">
+        </div><br><br>
+
+        <div>
+            <h2>4. Shake Effect</h2>
+            <img src="https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg" alt="Shaking Image" class="shake">
+        </div><br><br>
+
+        <div>
+            <h2>5. Spin Effect</h2>
+            <img src="https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg" alt="Spinning Image" class="spin">
+        </div><br><br>
+
+        <div>
+            <h2>6. Skew Effect</h2>
+            <img src="https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg" alt="Skewing Image" class="float">
+        </div><br><br>
+    </div>
+</body>
+</html>
