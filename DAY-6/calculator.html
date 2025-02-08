@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Web Calculator</title>
+<style>
+body {
+  font-family: sans-serif;
+}
+.calculator {
+  width: 300px;
+  margin: 0 auto;
+  border: 1px solid black;
+  padding: 10px;
+  background-color: rgb(247, 184, 210);
+}
+.display {
+  width: 90%;
+  padding: 10px;
+  font-size: 20px;
+  text-align: right;
+  border: 1px solid rgb(182, 76, 117);
+  margin-bottom: 10px;
+}
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 3px;
+  border-radius: 5px;
+  background-color: rgb(237, 135, 160);
+}
+button {
+  padding: 10px;
+  font-size: 18px;
+  border: 1px solid #ea3ee5; 
+  cursor: pointer;
+}
+.history {
+  margin-top: 20px;
+  border: 1px solid #40a445;
+  padding: 10px;
+  background-color: rgb(130, 57, 85);
+}
+.history-item {
+  margin-bottom: 5px;
+  cursor: pointer; 
+}
+.history-item:hover {
+    background-color:rgb(186, 49, 142); 
+}
+</style>
+</head>
+<body>
+
+<div class="calculator">
+  <input type="text" id="display" class="display" readonly>
+  <div class="buttons">
+    <button onclick="appendToDisplay('7')">7</button>
+    <button onclick="appendToDisplay('8')">8</button>
+    <button onclick="appendToDisplay('9')">9</button>
+    <button class="operator" onclick="appendToDisplay('+')">+</button>
+    <button onclick="appendToDisplay('4')">4</button>
+    <button onclick="appendToDisplay('5')">5</button>
+    <button onclick="appendToDisplay('6')">6</button>
+    <button class="operator" onclick="appendToDisplay('-')">-</button>
+    <button onclick="appendToDisplay('1')">1</button>
+    <button onclick="appendToDisplay('2')">2</button>
+    <button onclick="appendToDisplay('3')">3</button>
+    <button class="operator" onclick="appendToDisplay('')"></button>
+    <button onclick="appendToDisplay('0')">0</button>
+    <button onclick="appendToDisplay('.')">.</button>
+    <button onclick="calculate()">=</button>
+    <button class="operator" onclick="appendToDisplay('/')">/</button>
+    <button onclick="clearDisplay()">C</button>
+    <button onclick="clearHistory()">Clear History</button> </div>
+
+  <div class="history">
+    <h3>Calculation History</h3>
+    <div id="history-list">
+      </div>
+  </div>
+</div>
+
+<script>
+let display = document.getElementById('display');
+let historyList = document.getElementById('history-list');
+let history = [];
+
+function appendToDisplay(value) {
+  display.value += value;
+}
+
+function clearDisplay() {
+  display.value = '';
+}
+
+function calculate() {
+  try {
+    let result = eval(display.value);
+    display.value = result;
+    addToHistory(display.value);
+  } catch (error) {
+    display.value = 'Error';
+  }
+}
+
+function addToHistory(calculation) {
+  history.push(calculation);
+  if (history.length > 5) {
+      history.shift(); // Remove the oldest entry if history exceeds 5 items
+  }
+  updateHistoryDisplay();
+}
+
+function updateHistoryDisplay() {
+    historyList.innerHTML = ''; // Clear current list
+    for (let i = history.length - 1; i >= 0; i--) { // Display in reverse chronological order
+        let item = document.createElement('div');
+        item.className = 'history-item';
+        item.textContent = history[i];
+        item.addEventListener('click', function() {
+            display.value = history[i]; // Populate display with clicked history item
+        });
+        historyList.appendChild(item);
+    }
+}
+
+
+function clearHistory() {
+  history = [];
+  updateHistoryDisplay();
+}
+
+</script>
+
+</body>
+</html>

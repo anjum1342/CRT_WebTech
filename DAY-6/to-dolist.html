@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>To-Do List</title>
+<style>
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ed9696;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 400px;
+}
+
+.input-area {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color:green;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: move;
+}
+
+.task-text {
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.delete-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-left: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.filter-options {
+    margin-top: 15px;
+}
+
+.filter-btn {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #e0e0e0;
+}
+
+.filter-btn.active {
+    background-color: #4CAF50;
+    color: white;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <div class="input-area">
+            <input type="text" id="taskInput" placeholder="Add a new task">
+            <button id="addTaskBtn">Add</button>
+        </div>
+        <ul id="taskList">
+        </ul>
+        <div class="filter-options">
+            <button class="filter-btn active" data-filter="all">Show All</button>
+            <button class="filter-btn" data-filter="pending">Pending</button>
+            <button class="filter-btn" data-filter="completed">Completed</button>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const taskInput = document.getElementById('taskInput');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const taskList = document.getElementById('taskList');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    renderTasks(tasks);
+
+    addTaskBtn.addEventListener('click', () => {
+        const taskText = taskInput.value.trim();
+        if (taskText !== '') {
+            tasks.push({ text: taskText, completed: false });
+            saveTasks();
+            renderTasks(tasks);
+            taskInput.value = '';
+        }
+    });
+
+    taskList.addEventListener('click', (event) => {
+        if (event.target.classList.contains('delete-btn')) {
+            const index = event.target.dataset.index;
+            tasks.splice(index, 1);
+            saveTasks();
+            renderTasks(tasks);
+        } else if (event.target.classList.contains('task-text')) {
+            const index = event.target.dataset.index;
+            tasks[index].completed = !tasks[index].completed;
+            saveTasks();
+            renderTasks(tasks);
+        }
+    });
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const filter = button.dataset.filter;
+            filterTasks(filter);
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        });
+    });
+
+    function renderTasks(tasksToRender) {
+        taskList.innerHTML = '';
+        tasksToRender.forEach((task, index) => {
+            const li = document.createElement('li');
+            li.draggable = true; 
+            li.innerHTML = `
+                <span class="task-text ${task.completed ? 'completed' : ''}" data-index="${index}">${task.text}</span>
+                <button class="delete-btn" data-index="${index}">Delete</button>
+            `;
+            taskList.appendChild(li);
+
+           
+            li.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', index); 
+            });
+
+            li.addEventListener('dragover', (e) => {
+                e.preventDefault(); 
+            });
+
+            li.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const draggedIndex = e.dataTransfer.getData('text/plain');
+                const targetIndex = Array.from(taskList.children).indexOf(li);
+
+                if (draggedIndex != targetIndex) {
+                    const draggedTask = tasks[draggedIndex];
+                    tasks.splice(draggedIndex, 1);
+                    tasks.splice(targetIndex, 0, draggedTask);
+                    saveTasks();
+                    renderTasks(tasks);
+                }
+            });
+        });
+    }
+
+    function saveTasks() {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    function filterTasks(filter) {
+        let filteredTasks;
+        if (filter === 'all') {
+            filteredTasks = tasks;
+        } else if (filter === 'completed') {
+            filteredTasks = tasks.filter(task => task.completed);
+        } else if (filter === 'pending') {
+            filteredTasks = tasks.filter(task => !task.completed);
+        }
+        renderTasks(filteredTasks);
+    }
+});
+</script>
+
+</body>
+</html>

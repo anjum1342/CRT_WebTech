@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            height: 100vh;
+            background-color: darkkhaki;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .container {
+            width: 500px;
+            height: 500px;
+            display: flex;
+            flex-wrap: wrap;
+            perspective: 1000px;
+        }
+        .card {
+            width: 23%;
+            height: 23%;
+            margin: 5px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .card.flip {
+            transform: rotateY(180deg);
+        }
+        .card img {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+        }
+        .card .frontside {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body>
+    <h1>Test your memory now</h1>
+    <div class="container">
+        
+    </div>
+
+    <script>
+        const cardData = [
+            { name: "c++", img: "https://icon2.cleanpng.com/20180402/gle/avc6fi5sv.webp" },
+            { name: "css", img: "https://icon2.cleanpng.com/20240116/cpp/transparent-css-code-css-page-button-square-text-website-screen-with-css-button-and-1710895613626.webp" },
+            { name: "HTML", img: "https://banner2.cleanpng.com/lnd/20241017/cq/862317ac706a966edd54896cfe945b.webp" },
+            { name: "java", img: "https://banner2.cleanpng.com/lnd/20241004/zy/6674f220445d04b8d386f31d5c3f7f.webp" },
+            { name: "javascript", img: "https://banner2.cleanpng.com/20190305/los/kisspng-javascript-cascading-style-sheets-html-portable-ne-cione-o-to-lp-trnh-v-thit-k-1713903143521.webp" },
+            { name: "python", img: "https://banner2.cleanpng.com/20190623/etv/kisspng-python-high-level-programming-language-computer-pr-photos-ottawa-python-authors-group-ottawa-on-1713885632592.webp" },
+            { name: "R", img: "https://icon2.cleanpng.com/20180327/erq/avox58hk2.webp" },
+            { name: "SQL", img: "https://icon2.cleanpng.com/20180611/ipg/aa8k6rg0g.webp" }
+        ];
+
+        const gameContainer = document.querySelector(".container");
+        let cards = [...cardData, ...cardData]; 
+        let firstCard, secondCard;
+        let lockBoard = false;
+        let isFlipped = false;
+
+        // Shuffle cards
+        function shuffleCards() {
+            cards.sort(() => Math.random() - 0.5);
+        }
+
+        // Generate game board
+        function generateBoard() {
+            shuffleCards();
+            gameContainer.innerHTML = "";
+            cards.forEach((card) => {
+                const cardElement = document.createElement("div");
+                cardElement.classList.add("card");
+                cardElement.setAttribute("data-name", card.name);
+
+                cardElement.innerHTML = `
+                    <img src="${card.img}" class="frontside" alt="${card.name}">
+                    <img src="https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg" class="backside" alt="backlogo">
+                `;
+
+                cardElement.addEventListener("click", flipCard);
+                gameContainer.appendChild(cardElement);
+            });
+        }
+
+        
+        function flipCard() {
+            if (lockBoard || this === firstCard) return;
+
+            this.classList.add("flip");
+
+            if (!isFlipped) {
+                isFlipped = true;
+                firstCard = this;
+                return;
+            }
+
+            secondCard = this;
+            checkMatch();
+        }
+
+        
+        function checkMatch() {
+            let isMatch = firstCard.dataset.name === secondCard.dataset.name;
+
+            isMatch ? disableCards() : unflipCards();
+        }
+
+        function disableCards() {
+            firstCard.removeEventListener("click", flipCard);
+            secondCard.removeEventListener("click", flipCard);
+            resetBoard();
+        }
+
+        function unflipCards() {
+            lockBoard = true;
+            setTimeout(() => {
+                firstCard.classList.remove("flip");
+                secondCard.classList.remove("flip");
+                resetBoard();
+            }, 1000);
+        }
+
+        function resetBoard() {
+            [isFlipped, lockBoard] = [false, false];
+            [firstCard, secondCard] = [null, null];
+        }
+
+        generateBoard();
+    </script>
+</body>
+</html>
